@@ -1,0 +1,16 @@
+{
+    "contents" : "# Statistics for ___ project\n# Factors: ____ x ____\n# Equivalent to segmentation to <stim>, according to <segmentation tool>\n\n# install.packages(\"ez\") # Un-comment back in if you don't have these packages.\n\n# GribbleLab tutorial note: To adhere to the sum-to-zero convention \n# for effect weights, you should always do this before running anovas in R.\n# This ensures your output matches what SPSS would spit out.\n# Thanks to this blog post: \n# https://gribblelab.wordpress.com/2009/03/09/repeated-measures-anova-using-r/\noptions(contrasts=c(\"contr.sum\",\"contr.poly\"))\n\n#Factorize first\nmelted$cond1 = factor(melted$cond1) ### Change condition name\nmelted$cond2 = factor(melted$cond2) ### Change condition name\nmelted$Subject = factor(melted$Subject)\nmelted$value = as.numeric(as.character(melted$value))\n\n# # Un-comment lines 23-28 below if you want to use R's native anova method. \n# # You have to put in the actual condition names instead of 'cond1' and 'cond2'.\n# # Traditional R ANOVA\n# anova<-aov(value~(cond1*cond2)+Error(Subject/cond1)+cond2, data=melted) ## DV ~ IV or IV*IV2\n# summary(anova)\n# model.tables(anova)\n\n# Check number of subjs/cells per condition\ntable(melted$cond1, melted$cond2) ### Change condition names\n\n# cond1 = \"Expect\"\n# cond2 = \"Valence\"\n\n# Do ANOVA using ez package\nrequire(ez)\nez.ANOVA <- ezANOVA(data=melted, dv=.(value), \n                    wid=.(Subject), \n                    within=.(cond1, cond2), ### Change condition names\n                    detailed=T) \n\nprint(ez.ANOVA)\ne <- as.data.frame(ez.ANOVA) # Turns results into a table\nwrite.csv(e,            # Exports e table as csv\n          file=\"anova-out.csv\") ### Change filename as desired",
+    "created" : 1443049448779.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1521239082",
+    "id" : "5BCD7FD0",
+    "lastKnownWriteTime" : 1443049553,
+    "path" : "~/Dropbox/PottsLab/stats templates/erp statistics/tests.R",
+    "project_path" : "tests.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,16 @@
+{
+    "contents" : "####### Import and factorize all data textouts from xlsx\ndata<-melted # Read the data produced by reshapeData.R\n\nView(data) # Make sure it's kosher\n\n#Factorize first\ndata$cond1 = factor(data$cond1) ### Change condition name\ndata$cond2 = factor(data$cond2) ### Change condition name\ndata$Subject = factor(data$Subject)\ndata$value = as.numeric(as.character(data$value))\n\n#Check number of subjs/cells per condition\ntable(data$cond1, data$cond2) ### Change condition names\n\n# cond1 = \"Expect\" ### Assign your actual condition names\n# cond2 = \"Valence\" ### Assign your actual condition names\n\n# Load Rmisc package to run summarySE function. Used to be # source(\"summarySE.R\")\nrequire(Rmisc)\nbar <- summarySE(data, measurevar=\"value\", \n                 groupvars=c(\"cond1\",\"cond2\")) ### Change condition names\n\n# Use grouping var as a factor rather than numeric\nbar2 <- bar\nbar2$cond1 <- factor(bar2$cond1)\nbar2$cond2 <- factor(bar2$cond2)\n\n# Bar graph, Prediction on x-axis, color fill grouped by Outcome -- use position_dodge()\n# Error bars represent standard error of the mean\nrequire(ggplot2)\n\ngraph <- ggplot(bar2, aes(x=cond1, y=value, fill=cond2)) + ### Condition names\n  geom_bar(stat=\"identity\", position=position_dodge())  + \n  geom_errorbar(aes(ymin=value-se, ymax=value+se),\n                width=.2,                    # Width of the error bars\n                position=position_dodge(.9))\n\ngraph.clean <- graph +\n  scale_fill_brewer(type=\"qual\", palette=1) + #Neat auto colors \n  ggtitle(\"Your Graph Title\") + ###\n  ylab(\"Mean amplitude (µV)\") + \n  xlab(\"Your x variable\") + ###\n  coord_fixed(ratio=1/.3) +\n  #   scale_y_continuous(breaks=seq(-1.2,0,0.25), limits=c(-1.4,0)) + ### Constrain axis limits\n  #   guides(fill=F)\n  guides(fill=guide_legend(title=\"Your fill condition\"))\n\nprint(graph)\nprint(graph.clean)\n\n#! Save plots as images\nggsave(\"graph-clean.png\", ### Image file title\n       graph.clean, width=6, height=8)",
+    "created" : 1443049449828.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "373063779",
+    "id" : "44920715",
+    "lastKnownWriteTime" : 1443049178,
+    "path" : "~/Dropbox/PottsLab/stats templates/erp statistics/barGraph.R",
+    "project_path" : "barGraph.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
